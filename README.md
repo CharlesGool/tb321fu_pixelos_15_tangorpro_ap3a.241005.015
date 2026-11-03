@@ -20,7 +20,7 @@
 
 ## 简介
 
-联想拯救者 Y700 三代(TB321FU)的 Pixel Tablet Android 15 GSI(`AP3A.241005.015`)9008 刷机包. 当前正式版 user-v1.2(内部版本 V129). 已知问题见 [LOG](doc/LOG.md#限制).
+联想拯救者 Y700 三代(TB321FU)的 Pixel Tablet Android 15 GSI(`AP3A.241005.015`)9008 刷机包. 当前正式版 user-v1.3(内部版本 V132). 已知问题见 [LOG](doc/LOG.md#限制).
 
 ### 重点, 写在前面
 
@@ -30,7 +30,7 @@
 4. 除蓝牙硬件卸载(A2DP offload)外, 本机上遇到的硬件 Bug 都已修复. 蓝牙功能可以正常使用, 只是修得不够完美.
 5. 本刷机包可自动化构建. 有 Linux PC 的话, 可以自己更换 GSI 和底包版本并构建(底包和原厂固件需自备), 见 [TB321FU-GSI-Mods](https://github.com/CharlesGool/TB321FU-GSI-Mods).
 
-每个模块的作用见 [modules-user-v1.2](doc/modules-user-v1.2.md). 本版共 30 个模块: 全部必选模块加 5 个可选模块.
+每个模块的作用见 [modules-user-v1.3](doc/modules-user-v1.3.md). 本版共 30 个模块, 补丁集同 user-v1.2: 全部必选模块加 5 个可选模块.
 
 ### 身份和认证
 
@@ -107,7 +107,7 @@
 
 ```bash
 sha256sum -c SHA256SUMS.txt
-7z x pixelos_tangorpro_ap3a.241005.015_user-v1.2_optional.7z.001
+7z x pixelos_tangorpro_ap3a.241005.015_user-v1.3_optional.7z.001
 ```
 
 保数据刷运行 `flash_keep_data.bat`. 两个脚本都在解压目录根部.
@@ -116,9 +116,10 @@ sha256sum -c SHA256SUMS.txt
 
 | 文件 | 内容 |
 | --- | --- |
-| `…user-v1.2_optional.7z.001`, `.002` | 完整 9008 刷机包的 7z 分卷, 每卷 2000 MiB |
-| `SHA256SUMS.txt` | 分卷的校验值; 两卷按顺序拼接后的 sha256 为 `4cc450d58ef89097fe3a4b07b5aa53d01032e390371208e002aeb985fabe6cf2` |
-| `module-list.md` | 本版模块列表, 同 [modules-user-v1.2](doc/modules-user-v1.2.md) |
+| `…user-v1.3_optional.7z.001`, `.002` | 完整 9008 刷机包的 7z 分卷, 每卷 2000 MiB |
+| `…user-v1.2_to_user-v1.3_patch.zip` | 从 user-v1.2 保数据升级到 user-v1.3 的补丁, 14MB |
+| `SHA256SUMS.txt` | 分卷和补丁的校验值; 拼接后整包的 sha256 写在对应 Release 的说明里 |
+| `module-list.md` | 本版模块列表, 同 [modules-user-v1.3](doc/modules-user-v1.3.md) |
 
 ### 使用人脸解锁
 
@@ -126,11 +127,29 @@ sha256sum -c SHA256SUMS.txt
 
 ### 版本标识
 
-对外版本 `user-vMAJOR.MINOR`, 内部版本号 `V<数字>` 写在镜像里, user-v1.2 = V129.
+对外版本 `user-vMAJOR.MINOR`, 内部版本号 `V<数字>` 写在镜像里, user-v1.3 = V132.
 
 ## 升级
 
-暂无
+| 从 | 做法 |
+| --- | --- |
+| user-v1.2(V129) | 保数据, 用补丁(14MB), 步骤见下 |
+| user-v1.2(V129) | 保数据, 用完整包: 下载 user-v1.3 的完整包, 解压后设备进 9008, 运行 `flash_keep_data.bat` |
+| 其他版本 | 清数据: 用完整包运行 `flash.bat` |
+
+保数据刷只适用于手机上原来就是本项目的系统. 验证: 开机后设置里的版本标签应为 `user-v1.3`.
+
+### 用补丁从 user-v1.2 升级到 user-v1.3
+
+从 Release 下载 `pixelos_tangorpro_ap3a.241005.015_user-v1.2_to_user-v1.3_patch.zip`. 补丁改 `image\super_4.img`(system)和 `image\vbmeta_system.img`, 其余文件两个版本逐字节相同.
+
+1. 找到 user-v1.2 完整 9008 包解压后的目录(有 `flash.bat`, `flash_keep_data.bat`, `image\`, `tool\` 的那个), 其中 `image\super_4.img` 必须是 user-v1.2 的原文件.
+2. 把补丁 zip 全部解压到这个目录, 同名文件覆盖.
+3. 双击 `apply_patch.bat`. 它校验 `super_4.img` 的 sha256, 用 xdelta3 还原出 user-v1.3 的版本并再次校验, 通过后替换, 同时换上 user-v1.3 的 `vbmeta_system.img`. 旧文件改名为 `super_4.user-v1.2.img.bak` 和 `vbmeta_system.user-v1.2.img.bak`. 磁盘需要至少 2GB 空闲.
+4. 手机进 9008, 运行 `flash_keep_data.bat`.
+5. 回退: 把两个 `.bak` 文件改回原名, 再运行 `flash_keep_data.bat`.
+
+补丁基准 `super_4.img` 的 sha256 是 `5b1da8f2a6ccf389d8e6fedb1f69fb3389e6dd8eb6d39fd112c1f3d802277f9b`, 还原结果是 `70fcf1b3d41440e8d9eca791fc546ddd640c9f2568c2c6cb9cf595c4be135bc9`. 还原结果已在 Linux 上用 user-v1.2 完整包里的 `super_4.img` 验证过; `apply_patch.bat` 没有在 Windows 上实机运行过.
 
 ## 卸载
 

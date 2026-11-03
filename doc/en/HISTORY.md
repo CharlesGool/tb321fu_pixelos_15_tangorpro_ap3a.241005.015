@@ -27,3 +27,4 @@ metadata:
 ## Historical Records
 
 - 2026-11-04: Created this repository and released the 9008 flashing package volumes for user-v1.2 (V129). The repository was first created as private and then made public at the user's request.
+- 2026-11-04: Released the 9008 flashing package volumes for user-v1.3 (V132) and the patch for upgrading from user-v1.2.

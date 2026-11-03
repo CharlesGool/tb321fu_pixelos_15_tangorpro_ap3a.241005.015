@@ -26,6 +26,12 @@ metadata:
 
 ## 变更日志
 
+### user-v1.3(V132)- 2026-11-04
+
+- 新增: 本仓库的第二个 Release, 并提供从 user-v1.2 保数据升级的补丁(14MB).
+- 变更: `herald-core` 升到 V1.3, 工作目录回到 `/data/local/tmp`, 修复 V1.2 在真机上的 SELinux 标签问题.
+- 变更: 认证引擎换成含安全加固的新构建: 未知版本不 panic, `keymint.dat` 原子写, keybox 解析失败不覆盖已有文件.
+
 ### user-v1.2(V129)- 2026-11-04
 
 - 新增: 本仓库的首个 Release, 提供完整 9008 刷机包分卷, `SHA256SUMS.txt` 和模块列表.

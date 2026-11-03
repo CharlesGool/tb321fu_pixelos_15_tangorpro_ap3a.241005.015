@@ -27,3 +27,4 @@ metadata:
 ## Registros históricos
 
 - 2026-11-04: Se creó este repositorio y se publicaron las partes del paquete de flasheo 9008 de user-v1.2 (V129). Primero se creó como repositorio privado y, a petición del usuario, después se hizo público.
+- 2026-11-04: Se publicaron las partes del paquete de flasheo 9008 de user-v1.3 (V132) y el parche de actualización desde user-v1.2.

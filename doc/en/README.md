@@ -20,7 +20,7 @@
 
 ## Introduction
 
-The Pixel Tablet Android 15 GSI (`AP3A.241005.015`) 9008 flashing package for the Lenovo Legion Y700 Gen 3 (TB321FU). The current release is user-v1.2 (internal build V129). Known issues are in [LOG](LOG.md#limitations).
+The Pixel Tablet Android 15 GSI (`AP3A.241005.015`) 9008 flashing package for the Lenovo Legion Y700 Gen 3 (TB321FU). The current release is user-v1.3 (internal build V132). Known issues are in [LOG](LOG.md#limitations).
 
 ### Key Points Up Front
 
@@ -30,7 +30,7 @@ The Pixel Tablet Android 15 GSI (`AP3A.241005.015`) 9008 flashing package for th
 4. Apart from Bluetooth hardware offload (A2DP offload), all hardware bugs encountered on this device have been fixed. Bluetooth works normally, though the fix is not perfect.
 5. This package can be built automatically. With a Linux PC, you can replace the GSI and base-image versions and build it yourself (the base image and stock firmware must be supplied by you); see [TB321FU-GSI-Mods](https://github.com/CharlesGool/TB321FU-GSI-Mods).
 
-The function of each module is described in [modules-user-v1.2](../modules-user-v1.2.md). This release includes 30 modules: all required modules plus 5 optional modules.
+The function of each module is described in [modules-user-v1.3](../modules-user-v1.3.md). This release includes 30 modules, with the same patch set as user-v1.2: all required modules plus 5 optional modules.
 
 ### Identity and Attestation
 
@@ -107,7 +107,7 @@ Download all volumes (`.7z.001`, `.7z.002`) from [Releases](https://github.com/C
 
 ```bash
 sha256sum -c SHA256SUMS.txt
-7z x pixelos_tangorpro_ap3a.241005.015_user-v1.2_optional.7z.001
+7z x pixelos_tangorpro_ap3a.241005.015_user-v1.3_optional.7z.001
 ```
 
 For a keep-data flash, run `flash_keep_data.bat`. Both scripts are in the root of the extracted directory.
@@ -116,9 +116,10 @@ For a keep-data flash, run `flash_keep_data.bat`. Both scripts are in the root o
 
 | File | Contents |
 | --- | --- |
-| `…user-v1.2_optional.7z.001`, `.002` | The 7z volumes of the complete 9008 flashing package, 2000 MiB each |
-| `SHA256SUMS.txt` | Checksums for the volumes; the sha256 of the two volumes concatenated in order is `4cc450d58ef89097fe3a4b07b5aa53d01032e390371208e002aeb985fabe6cf2` |
-| `module-list.md` | Module list for this release, same as [modules-user-v1.2](../modules-user-v1.2.md) |
+| `…user-v1.3_optional.7z.001`, `.002` | The 7z volumes of the complete 9008 flashing package, 2000 MiB each |
+| `…user-v1.2_to_user-v1.3_patch.zip` | Patch for a keep-data upgrade from user-v1.2 to user-v1.3, 14MB |
+| `SHA256SUMS.txt` | Checksums for the volumes and the patch; the sha256 of the concatenated complete package is in the notes of the corresponding Release |
+| `module-list.md` | Module list for this release, same as [modules-user-v1.3](../modules-user-v1.3.md) |
 
 ### Using Face Unlock
 
@@ -126,11 +127,29 @@ Settings → Security & privacy → Device unlock → Face unlock → enter PIN 
 
 ### Version Naming
 
-The public version is `user-vMAJOR.MINOR`, and the internal build number `V<数字>` is written into the image; user-v1.2 = V129.
+The public version is `user-vMAJOR.MINOR`, and the internal build number `V<数字>` is written into the image; user-v1.3 = V132.
 
 ## Upgrade
 
-Not yet available.
+| From | Method |
+| --- | --- |
+| user-v1.2(V129) | Keep data, using the patch (14MB); steps below |
+| user-v1.2(V129) | Keep data, using the full package: download the user-v1.3 full package, extract it, put the device into 9008 mode, and run `flash_keep_data.bat` |
+| Other versions | Wipe data: run `flash.bat` from the full package |
+
+Keep-data flashing only applies to a device already running this project's system. Verification: after boot, the version label in Settings should read `user-v1.3`.
+
+### Upgrading from user-v1.2 to user-v1.3 with the Patch
+
+Download `pixelos_tangorpro_ap3a.241005.015_user-v1.2_to_user-v1.3_patch.zip` from the Release. The patch modifies `image\super_4.img` (system) and `image\vbmeta_system.img`; all other files are byte-for-byte identical in both versions.
+
+1. Locate the directory where the user-v1.2 complete 9008 package was extracted (the one containing `flash.bat`, `flash_keep_data.bat`, `image\`, and `tool\`). The `image\super_4.img` in it must be the original user-v1.2 file.
+2. Extract the whole patch zip into this directory, overwriting files with the same names.
+3. Double-click `apply_patch.bat`. It verifies the sha256 of `super_4.img`, uses xdelta3 to restore the user-v1.3 version and verifies it again. After it passes, it replaces the file and installs the user-v1.3 `vbmeta_system.img`. The old files are renamed to `super_4.user-v1.2.img.bak` and `vbmeta_system.user-v1.2.img.bak`. At least 2GB of free disk space is required.
+4. Put the device into 9008 mode and run `flash_keep_data.bat`.
+5. To roll back: rename the two `.bak` files back to their original names, then run `flash_keep_data.bat`.
+
+The sha256 of the patch base `super_4.img` is `5b1da8f2a6ccf389d8e6fedb1f69fb3389e6dd8eb6d39fd112c1f3d802277f9b`, and the restored result is `70fcf1b3d41440e8d9eca791fc546ddd640c9f2568c2c6cb9cf595c4be135bc9`. The restored result has been verified on Linux using the `super_4.img` from the complete user-v1.2 package; `apply_patch.bat` has not been run on real Windows.
 
 ## Uninstall
 

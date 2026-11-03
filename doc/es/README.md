@@ -20,17 +20,17 @@ Paquete de flasheo 9008 para la Lenovo Legion Y700 de tercera generación (TB321
 
 ## Introducción
 
-Paquete 9008 con el GSI de Android 15 de Pixel Tablet (`AP3A.241005.015`) para la Lenovo Legion Y700 de tercera generación (TB321FU). Versión oficial actual: user-v1.2 (versión interna V129). Los problemas conocidos están en [LOG](LOG.md#limitaciones).
+Paquete 9008 del GSI de Android 15 de Pixel Tablet (`AP3A.241005.015`) para la Lenovo Legion Y700 de tercera generación (TB321FU). Versión oficial actual: user-v1.3 (versión interna V132). Los problemas conocidos están en [LOG](LOG.md#limitaciones).
 
 ### Lo principal, antes de empezar
 
-1. Este paquete de flasheo 9008 se puede flashear sin desbloquear el BL. Está firmado y no requiere desactivar la verificación de vbmeta. Incluye el firmware 9008 completo de la ZUI 17.0.12.044 original de Lenovo, por lo que no hace falta flashear antes un firmware oficial.
+1. Este paquete 9008 se puede flashear sin desbloquear el BL. Está firmado y no requiere desactivar la verificación de vbmeta. Incluye el firmware 9008 completo de la ZUI 17.0.12.044 original de Lenovo, por lo que no hace falta flashear antes un firmware oficial.
 2. Todas las funciones siguientes están implementadas sin root.
-3. No afecta al entorno del sistema: los resultados de las aplicaciones de detección son iguales que en el sistema original. La única excepción es la "Suplantación global de modelo" de más abajo; si se activa, se detecta un montaje anómalo del sistema, y si no se activa, el entorno es perfecto.
+3. No afecta al entorno del sistema: los resultados de las aplicaciones de detección son iguales que en el sistema original. La única excepción es la "Suplantación global de modelo" de más abajo: si se activa, se detecta un montaje anómalo del sistema; si no, el entorno es perfecto.
 4. Salvo el offload de hardware de Bluetooth (A2DP offload), los errores de hardware encontrados en este equipo están corregidos. La función Bluetooth funciona con normalidad, aunque la corrección no es perfecta.
 5. Este paquete se puede compilar automáticamente. Con un PC Linux, puede cambiar el GSI y la versión de la base y compilarlo usted mismo (la base y el firmware original deben aportarse); véase [TB321FU-GSI-Mods](https://github.com/CharlesGool/TB321FU-GSI-Mods).
 
-Cada módulo está descrito en [modules-user-v1.2](../modules-user-v1.2.md). Esta versión tiene 30 módulos: todos los obligatorios más 5 opcionales.
+Cada módulo está descrito en [modules-user-v1.3](../modules-user-v1.3.md). Esta versión tiene 30 módulos, con el mismo conjunto de parches que user-v1.2: todos los obligatorios más 5 opcionales.
 
 ### Identidad y autenticación
 
@@ -107,7 +107,7 @@ Descargue todos los volúmenes (`.7z.001`, `.7z.002`) desde [Releases](https://g
 
 ```bash
 sha256sum -c SHA256SUMS.txt
-7z x pixelos_tangorpro_ap3a.241005.015_user-v1.2_optional.7z.001
+7z x pixelos_tangorpro_ap3a.241005.015_user-v1.3_optional.7z.001
 ```
 
 Para flashear conservando datos, ejecute `flash_keep_data.bat`. Ambos scripts están en la raíz del directorio descomprimido.
@@ -116,9 +116,10 @@ Para flashear conservando datos, ejecute `flash_keep_data.bat`. Ambos scripts es
 
 | Archivo | Contenido |
 | --- | --- |
-| `…user-v1.2_optional.7z.001`, `.002` | Volúmenes 7z del paquete completo de flasheo 9008, de 2000 MiB cada uno |
-| `SHA256SUMS.txt` | Sumas de verificación de los volúmenes; el sha256 de los dos volúmenes concatenados en orden es `4cc450d58ef89097fe3a4b07b5aa53d01032e390371208e002aeb985fabe6cf2` |
-| `module-list.md` | Lista de módulos de esta versión, igual que [modules-user-v1.2](../modules-user-v1.2.md) |
+| `…user-v1.3_optional.7z.001`, `.002` | Volúmenes 7z del paquete completo de flasheo 9008, de 2000 MiB cada uno |
+| `…user-v1.2_to_user-v1.3_patch.zip` | Parche para actualizar de user-v1.2 a user-v1.3 conservando datos, 14MB |
+| `SHA256SUMS.txt` | Sumas de verificación de los volúmenes y del parche; el sha256 del paquete completo tras concatenar los volúmenes figura en las notas del Release correspondiente |
+| `module-list.md` | Lista de módulos de esta versión, igual que [modules-user-v1.3](../modules-user-v1.3.md) |
 
 ### Uso del desbloqueo facial
 
@@ -126,11 +127,29 @@ Ajustes → Seguridad y privacidad → Desbloqueo del dispositivo → Desbloqueo
 
 ### Identificación de versión
 
-La versión pública es `user-vMAJOR.MINOR`; el número interno `V<数字>` está escrito en la imagen. user-v1.2 = V129.
+La versión pública es `user-vMAJOR.MINOR`; el número interno `V<数字>` está escrito en la imagen. user-v1.3 = V132.
 
 ## Actualización
 
-Por ahora no hay.
+| Desde | Método |
+| --- | --- |
+| user-v1.2(V129) | Conservando datos, con el parche (14MB); pasos más abajo |
+| user-v1.2(V129) | Conservando datos, con el paquete completo: descargue el paquete completo de user-v1.3, descomprímalo, ponga el dispositivo en modo 9008 y ejecute `flash_keep_data.bat` |
+| Otras versiones | Con borrado de datos: ejecute `flash.bat` con el paquete completo |
+
+El flasheo conservando datos solo se aplica si el dispositivo ya tenía este sistema del proyecto. Verificación: tras arrancar, la etiqueta de versión en Ajustes debe ser `user-v1.3`.
+
+### Actualizar de user-v1.2 a user-v1.3 con el parche
+
+Descargue `pixelos_tangorpro_ap3a.241005.015_user-v1.2_to_user-v1.3_patch.zip` desde el Release. El parche modifica `image\super_4.img` (system) y `image\vbmeta_system.img`; los demás archivos son idénticos byte a byte en ambas versiones.
+
+1. Localice el directorio donde se descomprimió el paquete completo de user-v1.2 (el que tiene `flash.bat`, `flash_keep_data.bat`, `image\` y `tool\`); en él, `image\super_4.img` debe ser el archivo original de user-v1.2.
+2. Descomprima todo el zip del parche en ese directorio, sobrescribiendo los archivos con el mismo nombre.
+3. Ejecute `apply_patch.bat` con doble clic. Comprueba el sha256 de `super_4.img`, reconstruye la versión de user-v1.3 con xdelta3 y vuelve a comprobarla; si todo es correcto, la sustituye y pone el `vbmeta_system.img` de user-v1.3. Los archivos antiguos se renombran a `super_4.user-v1.2.img.bak` y `vbmeta_system.user-v1.2.img.bak`. Se necesitan al menos 2GB libres en disco.
+4. Ponga el dispositivo en modo 9008 y ejecute `flash_keep_data.bat`.
+5. Para revertir: renombre los dos archivos `.bak` a su nombre original y vuelva a ejecutar `flash_keep_data.bat`.
+
+El sha256 de la base `super_4.img` del parche es `5b1da8f2a6ccf389d8e6fedb1f69fb3389e6dd8eb6d39fd112c1f3d802277f9b`, y el del resultado de la restauración es `70fcf1b3d41440e8d9eca791fc546ddd640c9f2568c2c6cb9cf595c4be135bc9`. El resultado de la restauración se ha verificado en Linux con el `super_4.img` del paquete completo de user-v1.2; `apply_patch.bat` no se ha ejecutado en Windows en un equipo real.
 
 ## Desinstalación
 

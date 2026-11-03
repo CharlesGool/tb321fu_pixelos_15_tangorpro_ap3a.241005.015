@@ -35,7 +35,7 @@ No hay errores confirmados.
 
 ## Limitaciones
 
-- La imagen del sistema incluye una semilla de keybox de respaldo; caduca o queda invalidada si se revoca, y a partir de ese momento la autenticación de claves requiere que el usuario importe un keybox válido. La semilla incluida en user-v1.2 tiene validez hasta el 2026-11-10 (fuente: nota de mantenimiento del proyecto; no verificada en la imagen).
+- La imagen del sistema incluye una semilla de keybox de respaldo; caduca o queda invalidada si se revoca, y a partir de ese momento la autenticación de claves requiere que el usuario importe un keybox válido. La semilla incluida en user-v1.2 tiene validez hasta el 2026-11-10 (fuente: nota de mantenimiento del proyecto; no verificada en la imagen); la semilla de user-v1.3 no se ha revisado.
 - El endurecimiento de permisos por aplicación (similar a GrapheneOS), que corta la red y los sensores de cada app, está aparcado y no forma parte del repositorio: la parte de red puede hacerse con `cmd connectivity chain3`; los sensores de movimiento solo con hooks de Java, lo que resulta bastante difícil.
 - El flasheo conservando datos solo se aplica si el dispositivo ya tenía el sistema de este proyecto.
 - LE Audio está desactivado; los auriculares de modo dual usan Bluetooth clásico.

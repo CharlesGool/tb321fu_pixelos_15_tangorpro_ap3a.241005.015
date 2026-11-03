@@ -26,6 +26,12 @@ metadata:
 
 ## Changelog
 
+### user-v1.3(V132)- 2026-11-04
+
+- Added: The second release of this repository, also providing a keep-data upgrade patch from user-v1.2 (14MB).
+- Changed: `herald-core` upgraded to V1.3. The working directory is back to `/data/local/tmp`, fixing the SELinux label issue of V1.2 on real devices.
+- Changed: The attestation engine is replaced with a new build that includes security hardening: unknown versions no longer panic, `keymint.dat` is written atomically, and a failed keybox parse no longer overwrites an existing file.
+
 ### user-v1.2(V129)- 2026-11-04
 
 - Added: The first release of this repository, providing the complete 9008 flashing package volumes, `SHA256SUMS.txt`, and the module list.
