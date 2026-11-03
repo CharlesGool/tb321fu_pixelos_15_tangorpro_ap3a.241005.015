@@ -89,43 +89,6 @@
 - SELinux 规则修复: 开机即 Enforcing(原版缺规则会报错).
 - 设备连接服务(DeviceConnectionService)域修复, 不再每 10 秒崩一次.
 
-### 没打进本版的模块
-
-这些模块仓库里有, 但 user-v1.2 没有打进来. 测试状态是作者自己的记录.
-
-日常功能:
-
-- 刷新率控制(`refresh-control`): `heraldctl refresh` 锁定或限定 30~165Hz. 已通过稳定性测试.
-- 按应用/电量自动换刷新率(`refresh-auto-switch`): 依赖刷新率控制. 已通过稳定性测试.
-- 电池管理(`battery`): 寿命查看, 长期插电保护, 充电上限, 旁路充电. 节点和取值来自联想电池 HAL 反编译. 已通过稳定性测试.
-- 热点控制(`hotspot-control`): 自定义热点名称, 密码, 加密, 频段, `heraldctl wifi`. 不太稳定, 固定频宽还有一点问题.
-- 解锁 6GHz 热点(`hotspot-6ghz-unlock`): 放开能力位, 信道列表, 设置页三道门. 已通过稳定性测试.
-- HBM 不限时(`brightness/hbm-unlimited`): 去掉 782 尼特的 5 分钟时限. 已通过稳定性测试.
-- 按应用伪装(`spoof/app-spoof`): 按 App 伪装 Build.*, 依赖 global-pif 的开机脚本. 已通过稳定性测试, 但是会被检测, 所以没实装.
-
-高级功能(默认不打):
-
-- 状态栏网速(`statusbar-netspeed`): 不改 SystemUI APK, 走 framework 钩子. 已通过稳定性测试, 但是有一点丑, 也没实装.
-- 开发者选项隐藏(`devopts-hide`): 名单内 App 读开发者选项/ADB 状态得到 0. 不太稳定, 部分 App 依然可以读到.
-- 自定义字体(`custom-font`): 读 `/data/fonts/herald` 字体包, 不占 system. 未测试.
-- 应用备份还原(`app-backup`): apk(含 split)加数据备份到指定目录, 不定时. 已实现, 未测试.
-- 游戏模式(`game-mode`): 游戏名单, 前台触发, 锁退出途径, 自动勿扰. 不太稳定.
-- 性能调节(`perf`): CPU/GPU 频率上下限, 省电/均衡/性能一键切档, 温度读数. 已通过稳定性测试.
-- 游戏性能联动(`perf-game-boost`): 游戏模式的性能档钩子. 不太稳定.
-- overlay 缓存自愈(`overlay-idmap-reset`): 开机删旧 idmap, 防 idmap2d 崩溃. 已通过稳定性测试.
-
-额外精简:
-
-- 精简无障碍应用(`slim/accessibility`): 删读屏等, 需要读屏的人别用. 已通过稳定性测试(本版已随 Google 应用级别 3 一起删除).
-- 精简 Google 应用(`slim/google-apps`): 删 Google 预装应用, 助理, TTS 数据. 已通过稳定性测试(本版已按级别 3 精简).
-
-调试和调研(正常使用不需要):
-
-- adb 可抓日志(`shell-logcat`), 开机自动开 ADB(`adb-on-boot`, 免授权).
-- adb root(`rooted-adbd`, `ro.debuggable=1`, adbd/shell 域 permissive).
-- root 只读命令(`herald-readonly-shell`, 默认关), root shell(`herald-rooted-shell`, 默认关, 限时打开).
-- zygote 时序测量(`herald-zygisk-timing-probe`), zygote 注入点验证(`herald-zygisk-fork-observer`), 开机相机日志(`diag-boot-camera-log`).
-
 补丁和构建系统在 [TB321FU-GSI-Mods](https://github.com/CharlesGool/TB321FU-GSI-Mods). PixelOS 15 tangorpro 有多个底包版本, 每个底包版本一个仓库, 本仓库只对应 `AP3A.241005.015`.
 
 ## 要求

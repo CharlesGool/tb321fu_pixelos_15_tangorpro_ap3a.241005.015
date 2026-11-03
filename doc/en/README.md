@@ -89,43 +89,6 @@ The function of each module is described in [modules-user-v1.2](../modules-user-
 - SELinux rule fix: Enforcing on boot (stock was missing rules and reported errors).
 - DeviceConnectionService domain fix: no longer crashes every 10 seconds.
 
-### Modules Not Included in This Release
-
-These modules are in the repository but are not included in user-v1.2. Test status is the author's own record.
-
-Everyday features:
-
-- Refresh rate control (`refresh-control`): `heraldctl refresh` locks or limits the rate to 30~165Hz. Passed stability testing.
-- Automatic refresh rate switching by app or battery (`refresh-auto-switch`): depends on refresh rate control. Passed stability testing.
-- Battery management (`battery`): battery life view, long-term plug-in protection, charge limit, and bypass charging. The nodes and values come from decompiling Lenovo's battery HAL. Passed stability testing.
-- Hotspot control (`hotspot-control`): custom hotspot name, password, encryption, band, and `heraldctl wifi`. Not very stable; the fixed bandwidth still has some issues.
-- Unlock 6GHz hotspot (`hotspot-6ghz-unlock`): removes the capability bit restriction, the channel list, and the three gates in the settings page. Passed stability testing.
-- Unlimited HBM (`brightness/hbm-unlimited`): removes the 5-minute time limit at 782 nits. Passed stability testing.
-- Per-app spoofing (`spoof/app-spoof`): spoofs Build.* per app and depends on global-pif's boot script. Passed stability testing, but it can be detected, so it was not shipped.
-
-Advanced features (not included by default):
-
-- Status bar network speed (`statusbar-netspeed`): does not modify the SystemUI APK and uses a framework hook. Passed stability testing, but it looks a bit ugly, so it was not shipped.
-- Developer options hiding (`devopts-hide`): apps on the list read 0 for developer options and ADB status. Not very stable; some apps can still read the real value.
-- Custom font (`custom-font`): reads font packs from `/data/fonts/herald` and does not occupy system. Untested.
-- App backup and restore (`app-backup`): backs up APKs (including splits) and data to a specified directory, not on a schedule. Implemented, untested.
-- Game mode (`game-mode`): game list, foreground trigger, exit methods on lock, and automatic Do Not Disturb. Not very stable.
-- Performance tuning (`perf`): CPU/GPU frequency limits, one-tap power saving, balanced and performance profiles, and temperature readings. Passed stability testing.
-- Game performance boost (`perf-game-boost`): performance profile hooks for game mode. Not very stable.
-- Overlay cache self-healing (`overlay-idmap-reset`): deletes old idmap files at boot to prevent idmap2d crashes. Passed stability testing.
-
-Additional trimming:
-
-- Accessibility app trimming (`slim/accessibility`): removes screen readers and similar apps; people who need a screen reader should not use it. Passed stability testing (already removed in this release along with Google app level 3).
-- Google app trimming (`slim/google-apps`): removes pre-installed Google apps, Assistant, and TTS data. Passed stability testing (this release already trimmed them per level 3).
-
-Debugging and research (not needed for normal use):
-
-- adb log capture (`shell-logcat`), and ADB enabled automatically at boot (`adb-on-boot`, no authorization needed).
-- adb root (`rooted-adbd`, `ro.debuggable=1`, adbd and shell domains permissive).
-- Root read-only commands (`herald-readonly-shell`, off by default) and root shell (`herald-rooted-shell`, off by default, time-limited).
-- zygote timing measurement (`herald-zygisk-timing-probe`), zygote injection-point verification (`herald-zygisk-fork-observer`), and boot camera logging (`diag-boot-camera-log`).
-
 Patches and the build system are in [TB321FU-GSI-Mods](https://github.com/CharlesGool/TB321FU-GSI-Mods). PixelOS 15 tangorpro has several base-image versions, each with its own repository; this repository only covers `AP3A.241005.015`.
 
 ## Requirements

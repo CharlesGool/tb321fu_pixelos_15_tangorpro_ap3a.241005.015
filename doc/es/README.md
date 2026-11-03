@@ -89,43 +89,6 @@ Cada módulo está descrito en [modules-user-v1.2](../modules-user-v1.2.md). Est
 - Corrección de reglas de SELinux: arranca en modo Enforcing (la versión original daba error cuando faltaban reglas).
 - Corrección del dominio del servicio de conexión de dispositivos (DeviceConnectionService), que ya no falla cada 10 segundos.
 
-### Módulos que no se incluyeron en esta versión
-
-Estos módulos están en el repositorio, pero user-v1.2 no los incluye. Los estados de prueba son registros del propio autor.
-
-Funciones de uso diario:
-
-- Control de la tasa de refresco (`refresh-control`): `heraldctl refresh` fija o limita 30~165Hz. Superó la prueba de estabilidad.
-- Cambio automático de tasa según la aplicación o la batería (`refresh-auto-switch`): depende del control de tasa de refresco. Superó la prueba de estabilidad.
-- Gestión de batería (`battery`): consulta de vida útil, protección de carga prolongada, límite de carga y carga por bypass. Los nodos y valores proceden de la descompilación de la HAL de batería de Lenovo. Superó la prueba de estabilidad.
-- Control del punto de acceso (`hotspot-control`): nombre, contraseña, cifrado y banda personalizados, y `heraldctl wifi`. Poco estable; hay un pequeño problema con el ancho de banda fijo.
-- Desbloqueo del punto de acceso de 6GHz (`hotspot-6ghz-unlock`): libera el bit de capacidad, la lista de canales y tres puertas de la página de ajustes. Superó la prueba de estabilidad.
-- HBM sin límite de tiempo (`brightness/hbm-unlimited`): elimina el límite de 5 minutos a 782 nits. Superó la prueba de estabilidad.
-- Suplantación por aplicación (`spoof/app-spoof`): suplanta Build.* por aplicación; depende del script de arranque de global-pif. Superó la prueba de estabilidad, pero es detectable, así que no se incluyó.
-
-Funciones avanzadas (no se incluyen por defecto):
-
-- Velocidad de red en la barra de estado (`statusbar-netspeed`): no modifica el APK de SystemUI; usa un hook de framework. Superó la prueba de estabilidad, pero es algo poco estético, y tampoco se incluyó.
-- Ocultar las opciones de desarrollador (`devopts-hide`): las aplicaciones de la lista leen 0 en el estado de opciones de desarrollador/ADB. Poco estable; algunas aplicaciones siguen pudiendo leerlo.
-- Fuente personalizada (`custom-font`): lee el paquete de fuentes de `/data/fonts/herald`, sin ocupar system. Sin probar.
-- Copia de seguridad y restauración de aplicaciones (`app-backup`): copia apk (incluidos split) y datos a un directorio indicado, sin programación. Implementada, sin probar.
-- Modo juego (`game-mode`): lista de juegos, activación en primer plano, vías de salida con bloqueo y no molestar automático. Poco estable.
-- Ajuste de rendimiento (`perf`): límites de frecuencia de CPU/GPU, cambio de un clic entre ahorro, equilibrado y rendimiento, y lectura de temperatura. Superó la prueba de estabilidad.
-- Vinculación de rendimiento del juego (`perf-game-boost`): hook de los perfiles de rendimiento del modo juego. Poco estable.
-- Autocuración de la caché de overlay (`overlay-idmap-reset`): borra los idmap antiguos al arrancar, para evitar fallos de idmap2d. Superó la prueba de estabilidad.
-
-Reducción adicional:
-
-- Reducción de aplicaciones de accesibilidad (`slim/accessibility`): elimina los lectores de pantalla, etc.; quien necesite un lector de pantalla no debe usarlo. Superó la prueba de estabilidad (en esta versión ya se eliminó con la reducción de Google, nivel 3).
-- Reducción de aplicaciones de Google (`slim/google-apps`): elimina las aplicaciones de Google preinstaladas, el asistente y los datos de TTS. Superó la prueba de estabilidad (en esta versión ya se redujo con el nivel 3).
-
-Depuración e investigación (no se necesitan para el uso normal):
-
-- Captura de registros por adb (`shell-logcat`) y activación automática de ADB al arrancar (`adb-on-boot`, sin autorización).
-- adb root (`rooted-adbd`, `ro.debuggable=1`, dominios adbd/shell en modo permisivo).
-- Comandos de solo lectura como root (`herald-readonly-shell`, desactivado por defecto) y shell root (`herald-rooted-shell`, desactivado por defecto, se abre durante un tiempo limitado).
-- Medición de tiempos de zygote (`herald-zygisk-timing-probe`), verificación del punto de inyección de zygote (`herald-zygisk-fork-observer`) y registro de la cámara al arrancar (`diag-boot-camera-log`).
-
 Los parches y el sistema de compilación están en [TB321FU-GSI-Mods](https://github.com/CharlesGool/TB321FU-GSI-Mods). PixelOS 15 tangorpro tiene varias versiones de base; cada una tiene su propio repositorio, y este solo corresponde a `AP3A.241005.015`.
 
 ## Requisitos
