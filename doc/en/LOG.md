@@ -36,6 +36,7 @@ No confirmed bugs.
 ## Limitations
 
 - The system image ships with a backup keybox seed. It stops working once it expires or is revoked, after which key attestation requires the user to import a valid keybox. The seed bundled with user-v1.2 is valid until 2026-11-10 (source: project maintenance notes; not verified in the image).
+- The per-app permission hardening that cuts network and sensor access (similar to GrapheneOS) has been shelved and is not in the repository. The network part could use `cmd connectivity chain3`, and motion sensors can only be handled via Java hooks, which is quite difficult.
 - Keep-data flashing only applies to a device already running this project's system.
 - LE Audio is disabled; dual-mode headphones use classic Bluetooth.
 - Face unlock is a WEAK biometric: it can unlock and do weak verification, but it cannot authorize payments or open StrongBox credentials.

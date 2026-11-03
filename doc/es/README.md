@@ -20,39 +20,117 @@ Paquete de flasheo 9008 para la Lenovo Legion Y700 de tercera generación (TB321
 
 ## Introducción
 
-En el TB321FU, el GSI de Android 15 de Pixel Tablet (`tangorpro`) reemplaza a ZUI y añade las funciones y correcciones que al GSI le faltan en este equipo. Flashear directamente un GSI de la comunidad provoca problemas: el brillo automático no funciona, los auriculares Bluetooth no suenan, las llamadas por Bluetooth no se oyen, las aplicaciones que solo funcionan en horizontal aparecen con la orientación invertida y no hay desbloqueo facial; este proyecto corrige todo ello.
+Paquete 9008 con el GSI de Android 15 de Pixel Tablet (`AP3A.241005.015`) para la Lenovo Legion Y700 de tercera generación (TB321FU). Versión oficial actual: user-v1.2 (versión interna V129). Los problemas conocidos están en [LOG](LOG.md#limitaciones).
 
-Sistema: Android 15 `AP3A.241005.015`, con estilo Pixel. La base es el Pixel Tablet (`tangorpro`) de Mystic GSI; vendor y boot son los de ZUI 17.0.12.044 originales de Lenovo. El paquete de flasheo es un 9008 completo, firmado, y no requiere desactivar la verificación de vbmeta.
+### Por qué hice este paquete de flasheo
 
-Versión oficial actual: user-v1.2 (versión interna V129). Los problemas conocidos están en [LOG](LOG.md#limitaciones).
+1. El sistema de Lenovo es poco práctico; prefiero un sistema más parecido al nativo, como Pixel OS.
+2. Quería algunas funciones avanzadas, pero sin root y sin entornos de detección complicados.
+3. Tengo Claude Max 20x 🤣
 
-### Características de la ROM
+### Lo principal, antes de empezar
 
-- Identidad restaurada al modelo original TB321FU, depuración desactivada por defecto, sin rastros de GSI ni de máquina virtual, y SELinux en modo Enforcing al arrancar.
-- Suplantación global de huella digital y autenticación de claves, para superar la verificación de integridad de Play.
-- Desbloqueo facial: incluye ParanoidSense de PixelOS (SDK de Megvii), usa la cámara frontal y es biometría WEAK (Class 2).
-- Rotación libre: las cuatro orientaciones rotan automáticamente, incluida la vertical invertida.
-- Niveles de fluidez de pantalla: en Ajustes, con "Fluidez de pantalla" activada no hay límite (el panel llega a 165Hz); desactivada, 120Hz.
-- Ocultar la barra de navegación (barra de navegación en modo teléfono, línea de gestos, barra de tareas de tablet), con `heraldctl` para activarlo o desactivarlo.
-- Compatibilidad con aplicaciones de 32 bits (traducción binaria Tango) y cámara de Pixel incluida (Cámara de Google 4.4).
-- `herald-core`: punto de entrada de comandos y complementos sin root; las aplicaciones de frontend lo usan para controlar funciones del sistema.
+1. Este paquete de flasheo 9008 se puede flashear sin desbloquear el BL. Está firmado y no requiere desactivar la verificación de vbmeta. Incluye el firmware 9008 completo de la ZUI 17.0.12.044 original de Lenovo, por lo que no hace falta flashear antes un firmware oficial.
+2. Todas las funciones siguientes están implementadas sin root.
+3. No afecta al entorno del sistema: los resultados de las aplicaciones de detección son iguales que en el sistema original. La única excepción es la "Suplantación global de modelo" de más abajo; si se activa, se detecta un montaje anómalo del sistema, y si no se activa, el entorno es perfecto.
+4. Salvo el offload de hardware de Bluetooth (A2DP offload), los errores de hardware encontrados en este equipo están corregidos. La función Bluetooth funciona con normalidad, aunque la corrección no es perfecta.
+5. Este paquete se puede compilar automáticamente. Con un PC Linux, puede cambiar el GSI y la versión de la base y compilarlo usted mismo (la base y el firmware original deben aportarse); véase [TB321FU-GSI-Mods](https://github.com/CharlesGool/TB321FU-GSI-Mods).
 
-### Qué se corrigió
+Cada módulo está descrito en [modules-user-v1.2](../modules-user-v1.2.md). Esta versión tiene 30 módulos: todos los obligatorios más 5 opcionales.
 
-- Brillo automático: se restablece el interruptor de brillo adaptativo en Ajustes, se usan la curva y la velocidad de respuesta del brillo original de Lenovo, y el nivel mínimo manual vuelve al original.
-- Auriculares Bluetooth sin sonido y llamadas por Bluetooth que no se oyen: se desactiva el offload A2DP por hardware y se usa la codificación por software del vendor; se añaden comprobaciones de la política de audio y de SCO. Se desactiva LE Audio, que no está disponible, y los auriculares de modo dual usan Bluetooth clásico.
-- Aplicaciones que solo funcionan en horizontal (como la pantalla completa de B 站) con la orientación invertida: se corrige la orientación de pantalla y se quita el ajuste de orientación de la base de Pixel Tablet.
-- Tasa de refresco adaptativa: se restauran los temporizadores de inactividad y de tacto originales y la detección de contenido (baja con la pantalla estática, sube al tocar, y en vídeo sigue la tasa de fotogramas).
-- Punto de acceso WLAN: se restauran la entrada de Ajustes y el mosaico de ajustes rápidos; el punto de acceso de 6GHz funciona.
-- Cámara macro: tras restaurar la propiedad, el HAL de la cámara vuelve a mostrar la cámara macro n.º 2.
-- Ventana emergente al arrancar y bucle de fallos: se quita la ventana "Se ha producido un problema interno en el dispositivo" y se corrige el servicio de conexión de dispositivos, que fallaba cada 10 segundos.
-- Reducción: se eliminan los componentes de Pixel sin hardware correspondiente en este equipo (base, emisión, UWB, huella lateral, luz intensa/UV, banda base, etc.), las aplicaciones exclusivas de Pixel, restos de VNDK antiguo y del GSI, y, con el nivel 3, la mayoría de aplicaciones de Google (incluidas las de accesibilidad como TalkBack); las que necesite, instálelas de nuevo.
+### Identidad y autenticación
 
-La función de cada módulo está en [modules-user-v1.2](../modules-user-v1.2.md).
+- Restaura la identidad real del TB321FU (`ro.product.*`, huella digital y descriptores de build, tomados del firmware original).
+- Motor de autenticación de claves sin root: permite importar keybox y emitir claves RKP localmente (inspirado en las funciones del módulo Oh My Keymint).
+- Suplantación global de modelo (módulo opcional `global-pif`): con un clic se hace pasar por un modelo como Pixel Tablet, y así se puede superar la verificación de integridad de Play. Es la opción de menor impacto que he encontrado para superar la autenticación de Play sin root, pero al activarla se detecta un montaje anómalo del sistema. Si no la quiere, no la active.
+- `herald-core`: punto de entrada de comandos y complementos sin root (`heraldctl`); las aplicaciones de frontend lo usan para controlar funciones del sistema.
 
-### Hardware compatible
+### Cámara
 
-Hardware cubierto por las correcciones anteriores: CPU/GPU, Bluetooth (auriculares y llamadas), Wi-Fi y punto de acceso WLAN (incluido 6GHz), brillo automático, alta tasa de refresco de 165Hz, cámaras frontal, trasera y macro, rotación automática y desbloqueo facial. Esta lista indica lo que cubren las correcciones; no hay registro de pruebas individuales para cada elemento.
+- Incluye la cámara de Pixel (Cámara de Google 4.4).
+- Corrección de la cámara macro: la cámara macro n.º 2 está disponible para cámaras de terceros.
+
+### Desbloqueo facial
+
+- Nuevo desbloqueo facial, portado de ParanoidSense de PixelOS (SDK de Megvii), con la cámara frontal; sirve para el bloqueo de pantalla y para aplicaciones en escenarios que no son de pago. Es biometría WEAK (Class 2) y no autoriza pagos ni abre credenciales de StrongBox.
+
+### Pantalla y visualización
+
+- Corrección del brillo automático: restaura el interruptor de brillo adaptativo en Ajustes, usa la curva y la velocidad de respuesta del brillo original de Lenovo, y el nivel mínimo manual vuelve al original.
+- Corrección de la orientación: el sistema de Pixel Tablet y este equipo tienen orientaciones por defecto distintas; las aplicaciones que solo funcionan en horizontal (como la pantalla completa de B 站) ya no aparecen invertidas.
+- Corrección de la tasa de refresco adaptativa: restaura los temporizadores de inactividad y de tacto originales y la detección de contenido; baja con la pantalla estática, sube al tocar, y en vídeo sigue la tasa de fotogramas.
+- Niveles de fluidez de pantalla: en Ajustes, con "Fluidez de pantalla" activada no hay límite (el panel llega a 165Hz); desactivada, 120Hz (el sistema Pixel original alterna entre 60 y 165Hz; pasar a 120/165Hz resulta más útil).
+- Rotación libre: 90, 180 y 270 grados rotan automáticamente, incluida la vertical invertida.
+
+### Red y Bluetooth
+
+- Banda Wi-Fi de 6GHz y corrección del código de país; Wi-Fi APEX reempaquetado.
+- Corrección de la interfaz del punto de acceso: Pixel Tablet oculta por defecto la entrada del punto de acceso WLAN; se ha restaurado la entrada en Ajustes y el mosaico de ajustes rápidos.
+- Corrección del audio Bluetooth: se desactivan el offload A2DP por hardware y LE Audio, y se usa la codificación por software del vendor; se corrigen los auriculares sin sonido y las llamadas que no se oyen.
+
+### Compatibilidad de aplicaciones
+
+- Portado de Tango, con soporte para APK de 32 bits; se pueden usar aplicaciones de 32 bits, tomando como referencia el OnePlus 12 con Android 15 ColorOS.
+
+### Reducción del sistema
+
+- Elimina las aplicaciones y datos exclusivos de Pixel, reduce el VNDK antiguo y elimina los componentes de hardware de Pixel que este equipo no tiene.
+- Reducción de aplicaciones de Google, nivel 3 en esta versión: elimina la mayoría de aplicaciones de Google, incluidas las de accesibilidad como TalkBack; instale de nuevo las que necesite.
+- Limpia los restos de GSI (phh/Mystic).
+
+### Limpieza y cierre
+
+- Desactiva la depuración (adb root y la depuración vienen activados por defecto en la versión original).
+- Oculta las huellas de GSI, para evitar la detección de GSI.
+- Elimina el montaje de escritura de system de phh.
+- Mediante descompilación, elimina la ventana emergente "Se ha producido un problema interno en el dispositivo" al arrancar.
+- Unifica la cadena de autoría del kernel, limpia los precompilados caducados, reempaqueta boot y lo refirma para la AVB de este equipo.
+
+### Interfaz
+
+- Permite ocultar la barra de navegación (en modo tablet y en modo teléfono).
+
+### Correcciones de estabilidad
+
+- Corrección de reglas de SELinux: arranca en modo Enforcing (la versión original daba error cuando faltaban reglas).
+- Corrección del dominio del servicio de conexión de dispositivos (DeviceConnectionService), que ya no falla cada 10 segundos.
+
+### Módulos que no se incluyeron en esta versión
+
+Estos módulos están en el repositorio, pero user-v1.2 no los incluye. Los estados de prueba son registros del propio autor.
+
+Funciones de uso diario:
+
+- Control de la tasa de refresco (`refresh-control`): `heraldctl refresh` fija o limita 30~165Hz. Superó la prueba de estabilidad.
+- Cambio automático de tasa según la aplicación o la batería (`refresh-auto-switch`): depende del control de tasa de refresco. Superó la prueba de estabilidad.
+- Gestión de batería (`battery`): consulta de vida útil, protección de carga prolongada, límite de carga y carga por bypass. Los nodos y valores proceden de la descompilación de la HAL de batería de Lenovo. Superó la prueba de estabilidad.
+- Control del punto de acceso (`hotspot-control`): nombre, contraseña, cifrado y banda personalizados, y `heraldctl wifi`. Poco estable; hay un pequeño problema con el ancho de banda fijo.
+- Desbloqueo del punto de acceso de 6GHz (`hotspot-6ghz-unlock`): libera el bit de capacidad, la lista de canales y tres puertas de la página de ajustes. Superó la prueba de estabilidad.
+- HBM sin límite de tiempo (`brightness/hbm-unlimited`): elimina el límite de 5 minutos a 782 nits. Superó la prueba de estabilidad.
+- Suplantación por aplicación (`spoof/app-spoof`): suplanta Build.* por aplicación; depende del script de arranque de global-pif. Superó la prueba de estabilidad, pero es detectable, así que no se incluyó.
+
+Funciones avanzadas (no se incluyen por defecto):
+
+- Velocidad de red en la barra de estado (`statusbar-netspeed`): no modifica el APK de SystemUI; usa un hook de framework. Superó la prueba de estabilidad, pero es algo poco estético, y tampoco se incluyó.
+- Ocultar las opciones de desarrollador (`devopts-hide`): las aplicaciones de la lista leen 0 en el estado de opciones de desarrollador/ADB. Poco estable; algunas aplicaciones siguen pudiendo leerlo.
+- Fuente personalizada (`custom-font`): lee el paquete de fuentes de `/data/fonts/herald`, sin ocupar system. Sin probar.
+- Copia de seguridad y restauración de aplicaciones (`app-backup`): copia apk (incluidos split) y datos a un directorio indicado, sin programación. Implementada, sin probar.
+- Modo juego (`game-mode`): lista de juegos, activación en primer plano, vías de salida con bloqueo y no molestar automático. Poco estable.
+- Ajuste de rendimiento (`perf`): límites de frecuencia de CPU/GPU, cambio de un clic entre ahorro, equilibrado y rendimiento, y lectura de temperatura. Superó la prueba de estabilidad.
+- Vinculación de rendimiento del juego (`perf-game-boost`): hook de los perfiles de rendimiento del modo juego. Poco estable.
+- Autocuración de la caché de overlay (`overlay-idmap-reset`): borra los idmap antiguos al arrancar, para evitar fallos de idmap2d. Superó la prueba de estabilidad.
+
+Reducción adicional:
+
+- Reducción de aplicaciones de accesibilidad (`slim/accessibility`): elimina los lectores de pantalla, etc.; quien necesite un lector de pantalla no debe usarlo. Superó la prueba de estabilidad (en esta versión ya se eliminó con la reducción de Google, nivel 3).
+- Reducción de aplicaciones de Google (`slim/google-apps`): elimina las aplicaciones de Google preinstaladas, el asistente y los datos de TTS. Superó la prueba de estabilidad (en esta versión ya se redujo con el nivel 3).
+
+Depuración e investigación (no se necesitan para el uso normal):
+
+- Captura de registros por adb (`shell-logcat`) y activación automática de ADB al arrancar (`adb-on-boot`, sin autorización).
+- adb root (`rooted-adbd`, `ro.debuggable=1`, dominios adbd/shell en modo permisivo).
+- Comandos de solo lectura como root (`herald-readonly-shell`, desactivado por defecto) y shell root (`herald-rooted-shell`, desactivado por defecto, se abre durante un tiempo limitado).
+- Medición de tiempos de zygote (`herald-zygisk-timing-probe`), verificación del punto de inyección de zygote (`herald-zygisk-fork-observer`) y registro de la cámara al arrancar (`diag-boot-camera-log`).
 
 Los parches y el sistema de compilación están en [TB321FU-GSI-Mods](https://github.com/CharlesGool/TB321FU-GSI-Mods). PixelOS 15 tangorpro tiene varias versiones de base; cada una tiene su propio repositorio, y este solo corresponde a `AP3A.241005.015`.
 
@@ -91,7 +169,7 @@ Ajustes → Seguridad y privacidad → Desbloqueo del dispositivo → Desbloqueo
 
 ### Identificación de versión
 
-La versión pública es `user-vMAJOR.MINOR`; el número interno `V<número>` está escrito en la imagen. user-v1.2 = V129.
+La versión pública es `user-vMAJOR.MINOR`; el número interno `V<数字>` está escrito en la imagen. user-v1.2 = V129.
 
 ## Actualización
 
