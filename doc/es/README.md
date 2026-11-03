@@ -22,12 +22,6 @@ Paquete de flasheo 9008 para la Lenovo Legion Y700 de tercera generación (TB321
 
 Paquete 9008 con el GSI de Android 15 de Pixel Tablet (`AP3A.241005.015`) para la Lenovo Legion Y700 de tercera generación (TB321FU). Versión oficial actual: user-v1.2 (versión interna V129). Los problemas conocidos están en [LOG](LOG.md#limitaciones).
 
-### Por qué hice este paquete de flasheo
-
-1. El sistema de Lenovo es poco práctico; prefiero un sistema más parecido al nativo, como Pixel OS.
-2. Quería algunas funciones avanzadas, pero sin root y sin entornos de detección complicados.
-3. Tengo Claude Max 20x 🤣
-
 ### Lo principal, antes de empezar
 
 1. Este paquete de flasheo 9008 se puede flashear sin desbloquear el BL. Está firmado y no requiere desactivar la verificación de vbmeta. Incluye el firmware 9008 completo de la ZUI 17.0.12.044 original de Lenovo, por lo que no hace falta flashear antes un firmware oficial.

@@ -22,12 +22,6 @@
 
 The Pixel Tablet Android 15 GSI (`AP3A.241005.015`) 9008 flashing package for the Lenovo Legion Y700 Gen 3 (TB321FU). The current release is user-v1.2 (internal build V129). Known issues are in [LOG](LOG.md#limitations).
 
-### Why This Package Exists
-
-1. The Lenovo system is hard to use, and I prefer a stock-like Pixel OS.
-2. I want some advanced features without rooting, and without troublesome environment detection.
-3. I have Claude Max 20x 🤣
-
 ### Key Points Up Front
 
 1. This is a 9008 flashing package that can be flashed without unlocking the bootloader (BL). It is signed, and disabling vbmeta verification is not required. The package includes the complete Lenovo stock ZUI 17.0.12.044 9008 firmware, so you do not need to flash an official base image beforehand.
