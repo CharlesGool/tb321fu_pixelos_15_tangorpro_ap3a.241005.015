@@ -37,6 +37,10 @@ No confirmed bugs.
 
 - The system image ships with a backup keybox seed. It stops working once it expires or is revoked, after which key attestation requires the user to import a valid keybox. The seed bundled with user-v1.2 is valid until 2026-11-10 (source: project maintenance notes; not verified in the image).
 - Keep-data flashing only applies to a device already running this project's system.
+- LE Audio is disabled; dual-mode headphones use classic Bluetooth.
+- Face unlock is a WEAK biometric: it can unlock and do weak verification, but it cannot authorize payments or open StrongBox credentials.
+- Trim level 3 removed accessibility apps (TalkBack, etc.) and most Google apps; reinstall what you need.
+- The Bluetooth call fix targets the ZUI 17.0.12.044 vendor bundled in this package. If the device's vendor is replaced with another version, the fix may not apply (not verified).
 
 ## Decisions
 

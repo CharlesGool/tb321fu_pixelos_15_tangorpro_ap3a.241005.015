@@ -37,6 +37,10 @@ No hay errores confirmados.
 
 - La imagen del sistema incluye una semilla de keybox de respaldo; caduca o queda invalidada si se revoca, y a partir de ese momento la autenticación de claves requiere que el usuario importe un keybox válido. La semilla incluida en user-v1.2 tiene validez hasta el 2026-11-10 (fuente: nota de mantenimiento del proyecto; no verificada en la imagen).
 - El flasheo conservando datos solo se aplica si el dispositivo ya tenía el sistema de este proyecto.
+- LE Audio está desactivado; los auriculares de modo dual usan Bluetooth clásico.
+- El desbloqueo facial es biometría WEAK: sirve para desbloquear y para verificaciones débiles, pero no autoriza pagos ni abre credenciales de StrongBox.
+- Con el nivel de reducción 3 se eliminaron las funciones de accesibilidad (TalkBack, etc.) y la mayoría de aplicaciones de Google; instale de nuevo las que necesite.
+- La corrección de llamadas Bluetooth está hecha para el vendor ZUI 17.0.12.044 incluido en este paquete; si el vendor del dispositivo se cambia por otra versión, la corrección puede no aplicarse (no verificado).
 
 ## Decisiones
 
