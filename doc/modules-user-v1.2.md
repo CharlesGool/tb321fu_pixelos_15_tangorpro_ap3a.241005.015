@@ -1,9 +1,19 @@
-# user-v1.2 模块列表说明
+---
+name: modules-user-v1-2
+description: user-v1.2 的补丁模块列表
+metadata:
+  version: "1.0.0"
+  lang: "zh-CN"
+---
 
-本版(内部版本 V129)由 30 个补丁模块构建, 构建预设 `user-v1.2`: 全部 `required` 模块, 加 5 个 `optional` 模块. 每个模块的实际应用记录见同目录 `模块日志/`, 原始清单见 `MODULES.txt` 和 `SELECTION.txt`.
+# user-v1.2 模块列表
+
+本版(内部版本 V129)由 30 个补丁模块构建, 构建预设 `user-v1.2`: 全部 `required` 模块, 加 5 个 `optional` 模块. 原始清单见刷机包根目录的 `MODULES.txt` 和 `SELECTION.txt`.
 
 构建参数: `VERSION=V129 VERSION_LABEL=user-v1.2 PROFILE=user-v1.2 GOOGLE_SLIM=3`.
 设备: 联想拯救者 Y700 三代 TB321FU, 底包 Pixel Tablet(tangorpro)Android 15 `AP3A.241005.015` GSI, vendor 和 boot 用联想原厂 ZUI 17.0.12.044.
+
+返回 [README](../README.md).
 
 ## 身份与隐藏
 
